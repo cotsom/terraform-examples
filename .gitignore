@@ -1,0 +1,5 @@
+./yandex-cloud/kubernetes/.terraform
+./yandex-cloud/kubernetes/.terraform.lock.hcl
+./yandex-cloud/kubernetes/.terraform.tfstate.lock.info
+./yandex-cloud/kubernetes/terraform.tfstate
+./yandex-cloud/kubernetes/terraform.tfstate.backup

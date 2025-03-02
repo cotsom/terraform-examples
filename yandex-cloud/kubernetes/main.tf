@@ -69,6 +69,11 @@ resource "yandex_kubernetes_cluster" "zonal_cluster" {
   kms_provider {
     key_id = yandex_kms_symmetric_key.kms_key_resource_name.id
   }
+
+  depends_on = [
+    yandex_resourcemanager_folder_iam_member.ServiceAccountResourceName,
+    yandex_resourcemanager_folder_iam_member.NodeServiceAccountResourceName
+  ]
 }
 
 resource "yandex_vpc_network" "network_resource_name" {
@@ -113,3 +118,25 @@ resource "yandex_logging_group" "log_group_resource_name" {
   name = "k8s-log-group"
 }
 
+resource "yandex_resourcemanager_folder_iam_member" "ServiceAccountResourceName" {
+  folder_id = var.folder_id
+  role      = "k8s.clusters.agent"
+  member    = "serviceAccount:${yandex_iam_service_account.service_account_resource_name.id}"
+}
+resource "yandex_resourcemanager_folder_iam_member" "ServiceAccountResourceNameVpcRole" {
+  folder_id = var.folder_id
+  role      = "vpc.publicAdmin"
+  member    = "serviceAccount:${yandex_iam_service_account.service_account_resource_name.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "ServiceAccountResourceNameLoggingRole" {
+  folder_id = var.folder_id
+  role      = "logging.writer"
+  member    = "serviceAccount:${yandex_iam_service_account.service_account_resource_name.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "NodeServiceAccountResourceName" {
+  folder_id = var.folder_id
+  role      = "container-registry.images.puller"
+  member    = "serviceAccount:${yandex_iam_service_account.node_service_account_resource_name.id}"
+}
